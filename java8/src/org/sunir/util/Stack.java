@@ -1,11 +1,10 @@
 package org.sunir.util;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.List;
 
-public class Stack <T extends Serializable> { 
+public class Stack <T> { 
 	private List<T> stack = new ArrayList<T>();
 	
 	public void push(T t){
