@@ -10,7 +10,7 @@ public class LinkedList<T> {
 	
 	public T get(int index){
 		Node<T> current = head;
-		if(index > size || index < 0){
+		if(index > size - 1 || index < 0){
 			throw new IndexOutOfBoundsException();
 		}
 		for(int i = 0; i<= index; i ++){

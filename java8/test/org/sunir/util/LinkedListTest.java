@@ -89,6 +89,8 @@ public class LinkedListTest {
 		assertEquals(FOURTH, linkedList.get(3));
 		assertEquals(FIFTH, linkedList.get(4));
 		assertEquals(SIXTH, linkedList.get(5));
+		
+		linkedList.get(6);
 	}
 	
 	
