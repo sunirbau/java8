@@ -1,6 +1,7 @@
 package org.sunir.util;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class LinkedList<T> {
 	
@@ -48,10 +49,11 @@ public class LinkedList<T> {
 			if(current.next != null && current.next.getT().equals(t)){
 				current.next = current.next.next;	
 				size --;
-				break;
+				return;
 			}
 			current = current.next;
 		}
+		throw new NoSuchElementException();
 		
 	}
 	
@@ -63,10 +65,10 @@ public class LinkedList<T> {
 		for(int i = 0; i< index; i ++){
 			current = current.next;
 		}
-		T remove = current.next.getT();
+		Node<T> remove = current.next;
 		current.next = current.next.next;	
 		size --;
-		return remove;
+		return remove.getT();
 	}
 	
 	public List<T> getAll(){

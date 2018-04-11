@@ -11,12 +11,6 @@ public class Node<T> {
 	public Node() {
 		super();
 	}
-	public Node<T> getNext() {
-		return next;
-	}
-	public void setNext(Node<T> next) {
-		this.next = next;
-	}
 	public T getT() {
 		return t;
 	}
