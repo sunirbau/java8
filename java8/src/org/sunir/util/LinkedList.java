@@ -55,7 +55,7 @@ public class LinkedList<T> {
 		
 	}
 	
-	public void remove(int index){
+	public T remove(int index){
 		Node<T> current = head;
 		if(index > size -1 || index < 0){
 			throw new IndexOutOfBoundsException();
@@ -63,8 +63,10 @@ public class LinkedList<T> {
 		for(int i = 0; i< index; i ++){
 			current = current.next;
 		}
+		T remove = current.next.getT();
 		current.next = current.next.next;	
 		size --;
+		return remove;
 	}
 	
 	public List<T> getAll(){
@@ -77,39 +79,14 @@ public class LinkedList<T> {
 		return list;
 	}
 	
+	public int size(){
+		return size;
+	}
+	
 	@Override
 	public String toString(){
 		return getAll().toString();
 	}
 
-}
-
-
-  class Node<T> {
-	Node<T> next = null;
-	T t = null;
-	
-	public Node(T t) {
-		super();
-		this.t = t;
-	}
-	public Node() {
-		super();
-	}
-	public Node<T> getNext() {
-		return next;
-	}
-	public void setNext(Node<T> next) {
-		this.next = next;
-	}
-	public T getT() {
-		return t;
-	}
-	public void setT(T t) {
-		this.t = t;
-	}
-	
-	
-	
 	
 }

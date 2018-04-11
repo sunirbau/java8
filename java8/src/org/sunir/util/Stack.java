@@ -1,11 +1,9 @@
 package org.sunir.util;
 
-import java.util.ArrayList;
 import java.util.EmptyStackException;
-import java.util.List;
 
 public class Stack <T> { 
-	private List<T> stack = new ArrayList<T>();
+	private LinkedList<T> stack = new LinkedList<T>();
 	
 	public void push(T t){
 		stack.add(t);
