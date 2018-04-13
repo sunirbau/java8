@@ -43,5 +43,18 @@ public class LinkedHashMap<K,V> {
 	public int size(){
 		return size;
 	}
+	
+	@Override
+	public String toString(){
+		NodeKeyValue<K,V> current = head;
+		StringBuilder builder = new StringBuilder("{");
+		for(int i = 0; i< size; i++){
+			current = current.next;
+			builder.append(i == 0 ? "" : ", ");
+			builder.append(current.getKey()).append("=").append(current.getValue());
+		}
+		builder.append("}");
+		return builder.toString();
+	}
 
 }
