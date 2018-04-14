@@ -1,10 +1,12 @@
 package org.sunir.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -44,76 +46,34 @@ public class LinkedHashMapTest {
 		return sorted.toString();
 	}
 	
-//	@Test
-//	public void testLinkedListRemove() throws Exception {
-//		testLinkedHashMapPut();
-//		linkedHashMap.remove(FIRST);
-//		linkedHashMap.remove(SECOND);
-//		linkedHashMap.remove(THIRD);
-//		linkedHashMap.remove(FOURTH);
-//		linkedHashMap.remove(FIFTH);
-//		linkedHashMap.remove(SIXTH);
-//		assertEquals(getListString(),
-//				linkedHashMap.toString());	
-//	}
-//	
-//	@Test(expected = IndexOutOfBoundsException.class)
-//	public void testLinkedListAddAtIndex() throws Exception {
-//		linkedHashMap.add(SECOND);
-//		linkedHashMap.add(FOURTH);
-//		linkedHashMap.add(FIRST, 0);
-//		linkedHashMap.add(THIRD, 2);
-//		linkedHashMap.add(FIFTH, 4);
-//		linkedHashMap.add(SIXTH, 5);
-//		assertEquals(getListString(FIRST, SECOND, THIRD,FOURTH, FIFTH,SIXTH),
-//				linkedHashMap.toString());	
-//		linkedHashMap.add("seven", 7);
-//	}
-//	
-//	@Test(expected = IndexOutOfBoundsException.class)
-//	public void testLinkedListRemoveAtIndex() throws Exception {
-//		testLinkedHashMapPut();
-//		linkedHashMap.remove(5);
-//		assertEquals(getListString(FIRST, SECOND, THIRD,FOURTH, FIFTH),
-//				linkedHashMap.toString());	
-//		linkedHashMap.remove(2);
-//		assertEquals(getListString(FIRST, SECOND,FOURTH, FIFTH),
-//				linkedHashMap.toString());
-//		linkedHashMap.remove(3);
-//		assertEquals(getListString(FIRST, SECOND, FOURTH),
-//				linkedHashMap.toString());
-//		linkedHashMap.remove(1);
-//		assertEquals(getListString(FIRST,FOURTH),
-//				linkedHashMap.toString());
-//		linkedHashMap.remove(0);
-//		assertEquals(getListString(FOURTH),
-//				linkedHashMap.toString());
-//		
-//		linkedHashMap.remove(1);
-//		
-//	}
-//	
-//	
-//	@Test(expected = IndexOutOfBoundsException.class)
-//	public void testLinkedGet() throws Exception {
-//		testLinkedHashMapPut();
-//		assertEquals(FIRST, linkedHashMap.get(0));
-//		assertEquals(SECOND, linkedHashMap.get(1));
-//		assertEquals(THIRD, linkedHashMap.get(2));
-//		assertEquals(FOURTH, linkedHashMap.get(3));
-//		assertEquals(FIFTH, linkedHashMap.get(4));
-//		assertEquals(SIXTH, linkedHashMap.get(5));
-//		
-//		linkedHashMap.get(6);
-//	}
-//	
-//	
-//	
-//	private String getListString(String...strings){
-//		List<String> list = Arrays.asList(strings);
-//		return list.toString();	
-//	}
+	@Test(expected = NoSuchElementException.class)
+	public void testLinkedHashMapRemove() throws Exception {
+		testLinkedHashMapPut();
+		linkedHashMap.remove(FIRST);
+		linkedHashMap.remove(SECOND);
+		linkedHashMap.remove(THIRD);
+		linkedHashMap.remove(FOURTH);
+		linkedHashMap.remove(FIFTH);
+		linkedHashMap.remove(SIXTH);
+		assertEquals(getMapString(new String[]{},new Integer[]{}),
+				linkedHashMap.toString());	
+		linkedHashMap.remove(FIRST);
+	}
+
 	
+	@Test
+	public void testLinkedGet() throws Exception {
+		testLinkedHashMapPut();
+		assertEquals(one, linkedHashMap.get(FIRST));
+		assertEquals(two, linkedHashMap.get(SECOND));
+		assertEquals(three, linkedHashMap.get(THIRD));
+		assertEquals(four, linkedHashMap.get(FOURTH));
+		assertEquals(five, linkedHashMap.get(FIFTH));
+		assertEquals(six, linkedHashMap.get(SIXTH));
+		assertNull(linkedHashMap.get("seventh"));
+	}
+	
+
 	
 
 }
