@@ -2,9 +2,17 @@ package org.sunir.util;
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,10 +20,11 @@ import org.junit.Test;
 public class Java8CollectionsTest {
 
 	private List<User> users;
-	private User one = new User("Atest@yopmail.com", "111111");
-	private User two = new User("Btest22@yopmail.com", "222222");
-	private User three = new User("Ctest333@yopmail.com", "333333");
-	private User four = new User("Dtest4444@yopmail.com", "444444");
+	private User one = new User("Atest@yopmail.com", 1);
+	private User two = new User("Btest22@yopmail.com", 2);
+	private User three = new User("Ctest333@yopmail.com", 3);
+	private User four = new User("Dtest4444@yopmail.com", 4);
+	private Map<Integer, String> usersMap;
 	
 	@Before
 	public void setup(){
@@ -24,6 +33,8 @@ public class Java8CollectionsTest {
 		users.add(two);
 		users.add(three);
 		users.add(four);
+		usersMap = users.stream().collect(Collectors.toMap(User :: getUserId, User :: getUserName));
+		
 	}
 	
 	
@@ -41,4 +52,71 @@ public class Java8CollectionsTest {
 		 assertEquals(one ,users.get(0));
 		 users.forEach(x -> System.out.println(x.getUserName() + "-" + x.getUserId()));
 	}
+	
+
+	@Test
+	public void testFilter() throws Exception {
+		List<User> result = users.stream().filter(x -> x.getUserId() > 2).collect(Collectors.toList());
+		assertEquals(three, result.get(0));
+		assertEquals(four, result.get(1));
+		List<String> userNames = users.stream().filter(x -> x.getUserId() <= 2).map(User :: getUserName).collect(Collectors.toList());
+		assertEquals(one.getUserName(), userNames.get(0));
+		assertEquals(two.getUserName(), userNames.get(1));
+		
+	}
+	
+	@Test
+	public void testMap() throws Exception {
+		List<Integer> userIds = users.stream().map(x -> x.getUserId()).collect(Collectors.toList());
+		assertTrue(one.getUserId() == userIds.get(0));
+		assertTrue(two.getUserId() == userIds.get(1));
+		assertTrue(three.getUserId() == userIds.get(2));
+		assertTrue(four.getUserId() == userIds.get(3));
+	}
+	
+	@Test
+	public void testSortedMap() throws Exception {
+		
+		Map<Integer, String> result = usersMap.entrySet().stream().sorted(Map.Entry.comparingByKey(Comparator.reverseOrder())).
+				collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, 
+						(oldValue, newValue) -> oldValue, LinkedHashMap :: new ));
+	    Iterator<Entry<Integer, String>> iterator = result.entrySet().iterator();
+	    assertEquals(four.getUserName(), iterator.next().getValue());
+	    assertEquals(three.getUserName(), iterator.next().getValue());
+	    assertEquals(two.getUserName(), iterator.next().getValue());
+	    assertEquals(one.getUserName(), iterator.next().getValue());
+	    
+	    List<Integer> keys = usersMap.keySet().stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+	    assertTrue(four.getUserId() ==  keys.get(0));
+	    assertTrue(three.getUserId()  == keys.get(1));
+	    assertTrue(two.getUserId() ==  keys.get(2));
+	    assertTrue(one.getUserId() ==  keys.get(3));
+	    
+	    List<String> values = usersMap.values().stream().sorted().collect(Collectors.toList());
+	    assertEquals(one.getUserName(),  values.get(0));
+	    assertEquals(two.getUserName(), values.get(1));
+	    assertEquals(three.getUserName(), values.get(2));
+	    assertEquals(four.getUserName(), values.get(3));
+	
+	}
+	
+	@Test
+	public void testArrayStream() throws Exception {
+		String[] usernames = new String[]{one.getUserName(),two.getUserName(), three.getUserName(), four.getUserName()};
+		Stream<String> stream = Arrays.stream(usernames);
+		List<String> result = stream.filter(x -> x.matches(".*\\d+.*")).collect(Collectors.toList());
+		assertEquals(two.getUserName(),result.get(0));
+		assertEquals(three.getUserName(),result.get(1));
+		assertEquals(four.getUserName(),result.get(2));
+		
+		Supplier<Stream<String>> streamSupplier = () -> Stream.of(usernames);
+		List<String> collect = streamSupplier.get().filter(x -> x.matches("\\D+")).collect(Collectors.toList());
+		assertEquals(one.getUserName(), collect.get(0));
+		assertEquals(1, collect.size());
+		List<String> collect2 = streamSupplier.get().filter(x -> x.contains("B")).collect(Collectors.toList());
+		assertEquals(two.getUserName(), collect2.get(0));
+		assertEquals(1, collect2.size());
+	
+	}
+
 }

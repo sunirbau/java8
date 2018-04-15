@@ -3,10 +3,10 @@ package org.sunir.util;
 public class User {
 	
 	private String userName = "";
-	private String userId = "";
+	private int userId;
 	
 	
-	public User(String userName, String userId) {
+	public User(String userName, int userId) {
 		super();
 		this.userName = userName;
 		this.userId = userId;
@@ -17,12 +17,13 @@ public class User {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	public String getUserId() {
+	public int getUserId() {
 		return userId;
 	}
-	public void setUserId(String userId) {
+	public void setUserId(int userId) {
 		this.userId = userId;
 	}
+	
 	
 
 }
