@@ -1,15 +1,21 @@
 package org.sunir.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
+import java.util.StringJoiner;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,6 +31,7 @@ public class Java8CollectionsTest {
 	private User three = new User("Ctest333@yopmail.com", 3);
 	private User four = new User("Dtest4444@yopmail.com", 4);
 	private Map<Integer, String> usersMap;
+	private Random random;
 	
 	@Before
 	public void setup(){
@@ -34,6 +41,7 @@ public class Java8CollectionsTest {
 		users.add(three);
 		users.add(four);
 		usersMap = users.stream().collect(Collectors.toMap(User :: getUserId, User :: getUserName));
+		random = new Random();
 		
 	}
 	
@@ -117,6 +125,40 @@ public class Java8CollectionsTest {
 		assertEquals(two.getUserName(), collect2.get(0));
 		assertEquals(1, collect2.size());
 	
+	}
+	
+	@Test
+	public void testRandom() throws Exception {
+		List<Integer> collect = random.ints(20, 5, 10).boxed().collect(Collectors.toList());
+		collect.forEach(x -> assertTrue(x >= 5 && x < 10));
+		List<Integer> collect2 = random.ints(20, 5, 10 +1 ).boxed().collect(Collectors.toList());
+		collect2.forEach(x -> assertTrue(x >= 5 && x <= 10));
+	}
+	
+	@Test
+	public void testStringJoiner() throws Exception {
+		String delimiter = ", ";
+		StringJoiner sj = new StringJoiner(delimiter);
+		Supplier<Stream<User>> streamSupplier = ()-> users.stream();
+		List<String> collect = streamSupplier.get().map(User :: getUserName).collect(Collectors.toList());
+		collect.forEach(x ->  sj.add(x.toString()));
+	    String joined = streamSupplier.get().map(User :: getUserName).collect(Collectors.joining(delimiter));
+		assertEquals(joined, sj.toString());
+	}
+	
+	@Test
+	public void testMatch() throws Exception {
+		boolean anyMatch = users.stream().anyMatch(x -> x.getUserId() > 4);
+		assertFalse(anyMatch);
+		boolean anyMatch2 = users.stream().anyMatch(x -> x.getUserId() < 4);
+		assertTrue(anyMatch2);
+	}
+	
+	@Test
+	public void testFile() throws Exception {
+		List<String> collect = Files.lines(Paths.get("test.txt")).collect(Collectors.toList());
+		List<String> collect2 = Files.newBufferedReader(Paths.get("test.txt")).lines().collect(Collectors.toList());
+		assertEquals(collect, collect2);
 	}
 
 }
