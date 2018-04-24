@@ -2,10 +2,12 @@ package org.sunir.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -14,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Random;
 import java.util.StringJoiner;
 import java.util.function.Supplier;
@@ -159,6 +162,25 @@ public class Java8CollectionsTest {
 		List<String> collect = Files.lines(Paths.get("test.txt")).collect(Collectors.toList());
 		List<String> collect2 = Files.newBufferedReader(Paths.get("test.txt")).lines().collect(Collectors.toList());
 		assertEquals(collect, collect2);
+	}
+	
+	@Test
+	public void testOptional() throws Exception {
+        Optional<List<User>> nonEmpty = Optional.ofNullable(users);
+        Optional<List<User>> empty = Optional.empty();
+        
+        assertEquals(4, nonEmpty.get().size());
+        
+        Optional<List<User>> empty2 = Optional.ofNullable(null);
+        assertEquals(empty, empty2);
+        
+        assertTrue(nonEmpty.isPresent());
+        assertFalse(empty.isPresent());
+        assertEquals(users, nonEmpty.orElse(new ArrayList<User>()));
+        assertEquals(users, empty.orElse(nonEmpty.get()));
+        
+        assertEquals(four, nonEmpty.orElse(new ArrayList<User>()).stream().filter(x -> x.getUserId() > 3).findFirst().orElse(null));
+        assertNull(empty.orElse(new ArrayList<User>()).stream().filter(x -> x.getUserId() > 3).findFirst().orElse(null));
 	}
 
 }
